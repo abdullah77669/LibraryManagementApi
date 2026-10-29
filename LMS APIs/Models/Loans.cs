@@ -4,7 +4,7 @@ namespace LMS_APIs.Models
 {
     public class Loans
     {
-       
+
         [Key]
         public int LoanID { get; set; }
 
@@ -18,8 +18,8 @@ namespace LMS_APIs.Models
         [Required]
         public required DateTime LoanDate { get; set; }
 
-        [Required]
-        public required DateTime ReturnDate { get; set; }
+        // Null until the book is actually returned
+        public DateTime? ReturnDate { get; set; }
 
         [Required]
         [MaxLength(50)]
@@ -27,7 +27,7 @@ namespace LMS_APIs.Models
 
         [Required]
         public required DateTime DueDate { get; set; }
-    
 
-}
+
+    }
 }

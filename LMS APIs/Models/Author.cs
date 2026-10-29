@@ -5,16 +5,16 @@ namespace YourNamespace.Models
 {
     public class Author
     {
-       
+
         public int AuthorID { get; set; }
 
-       
+
         [Required]
         [StringLength(255)]
         public string Name { get; set; }
 
-       
-        public string Biography { get; set; }
+
+        public string? Biography { get; set; }
 
 
         [Required]

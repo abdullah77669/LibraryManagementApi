@@ -25,7 +25,7 @@ namespace LMS_APIs.Repository
         public Book PostBook(Book book)
         {
             _context.Books.Add(book);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
             return book;
         }
 

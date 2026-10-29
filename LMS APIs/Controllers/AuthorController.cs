@@ -33,7 +33,8 @@ namespace LMS_APIs.Controllers
         [HttpPost]
         public ActionResult<Author> PostAuthor(Author author)
         {
-            return _authorService.PostAuthor(author);
+            var created = _authorService.PostAuthor(author);
+            return CreatedAtAction(nameof(GetAuthorById), new { id = created.AuthorID }, created);
         }
 
         [HttpPut("{id}")]

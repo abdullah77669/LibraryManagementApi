@@ -25,7 +25,7 @@ namespace LMS_APIs.Repository
         public Author PostAuthor(Author author)
         {
             _context.Authors.Add(author);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
             return author;
         }
 

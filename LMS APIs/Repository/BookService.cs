@@ -17,6 +17,11 @@ namespace LMS_APIs.Repository
             return _context.Books.ToList();
         }
 
+        public List<Book> GetAllBookList()
+        {
+            return _context.Books.ToList();
+        }
+
         public Book GetBookById(int id)
         {
             return _context.Books.Find(id);

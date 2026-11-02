@@ -1,9 +1,6 @@
-﻿using LMS_APIs.Data;
-using LMS_APIs.Models;
+﻿using LMS_APIs.Models;
 using LMS_APIs.Repository;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using YourNamespace.Models;
 
 namespace LMS_APIs.Controllers
@@ -13,13 +10,10 @@ namespace LMS_APIs.Controllers
     public class BookController : ControllerBase
     {
         private readonly IBook _bookService;
-        private readonly ApplicationDBContext _context;
 
-        // Constructor should inject both the service and the context
-        public BookController(IBook bookService, ApplicationDBContext context)
+        public BookController(IBook bookService)
         {
             _bookService = bookService;
-            _context = context;
         }
 
         [HttpGet]
@@ -32,14 +26,7 @@ namespace LMS_APIs.Controllers
         [HttpGet("GetAllBookList")]
         public List<Book> GetAllBookList()
         {
-            // Using FromSqlRaw to execute raw SQL query
-            string sql = "SELECT * FROM Books";
-
-            // Execute the query and map the results to a list of Books.
-            var collection = _context.Books.FromSqlRaw(sql).ToList();
-
-            // Return the list of Books.
-            return collection;
+            return _bookService.GetAllBookList();
         }
 
 

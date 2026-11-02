@@ -26,7 +26,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IAuthor, AuthorService>();
 builder.Services.AddScoped<IBook, BookService>();
-
+builder.Services.AddScoped<ILoan, LoanService>();
+builder.Services.AddScoped<IBorrower, BorrowerService>();
+builder.Services.AddScoped<IBookCopy, BookCopyService>();
+builder.Services.AddScoped<IBranch, BranchService>();
+builder.Services.AddScoped<IPublisher, PublisherService>();
 
 var app = builder.Build();
 

@@ -1,4 +1,5 @@
 ﻿using LMS_APIs.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using YourNamespace.Models;
@@ -7,6 +8,7 @@ namespace LMS_APIs.Controllers
 {
     [Route("api/authors")]
     [ApiController]
+    [Authorize(Roles = "Admin,Librarian")]
     public class AuthorController : ControllerBase
     {
         private readonly IAuthor _authorService;
@@ -31,6 +33,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Librarian")]
         public ActionResult<Author> PostAuthor(Author author)
         {
             var created = _authorService.PostAuthor(author);
@@ -38,6 +41,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Librarian")]
         public IActionResult UpdateAuthor(int id, Author author)
         {
             var updatedAuthor = _authorService.UpdateAuthor(id, author);
@@ -46,6 +50,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Librarian")]
         public IActionResult DeleteAuthor(int id)
         {
             var deleted = _authorService.DeleteAuthor(id);

@@ -1,5 +1,6 @@
 using LMS_APIs.Data;
 using LMS_APIs.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,6 +24,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,Librarian")]
         public async Task<ActionResult<BookCategory>> GetCategoryById(int id)
         {
             var category = await _context.Categories.FindAsync(id);
@@ -31,6 +33,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Librarian")]
         public async Task<ActionResult<BookCategory>> PostCategory(BookCategory category)
         {
             category.BookCategoryID = 0;
@@ -40,6 +43,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Librarian")]
         public async Task<IActionResult> UpdateCategory(int id, BookCategory category)
         {
             var existing = await _context.Categories.FindAsync(id);
@@ -51,6 +55,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Librarian")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
             var existing = await _context.Categories.FindAsync(id);

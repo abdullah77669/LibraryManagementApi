@@ -1,11 +1,13 @@
 using LMS_APIs.Models;
 using LMS_APIs.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS_APIs.Controllers
 {
     [Route("api/loans")]
     [ApiController]
+    [Authorize]
     public class LoansController : ControllerBase
     {
         private readonly ILoan _loanService;

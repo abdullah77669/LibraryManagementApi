@@ -1,5 +1,6 @@
 ﻿using LMS_APIs.Models;
 using LMS_APIs.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using YourNamespace.Models;
 
@@ -7,6 +8,7 @@ namespace LMS_APIs.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles="Admin,Librarian")]
     public class BookController : ControllerBase
     {
         private readonly IBook _bookService;
@@ -41,12 +43,14 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Librarian")]
         public ActionResult<Book> PostBook(Book book)
         {
             return _bookService.PostBook(book);
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Librarian")]
         public IActionResult UpdateAuthor(int id, Book book)
         {
             var updatedAuthor = _bookService.UpdateBook(id, book);
@@ -55,6 +59,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Librarian")]
         public IActionResult DeleteBook(int id)
         {
             var deleted = _bookService.DeleteBook(id);

@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+/*using System.ComponentModel.DataAnnotations;
 
 namespace LMS_APIs.Models
 {
@@ -58,4 +58,4 @@ namespace LMS_APIs.Models
         public string Status { get; set; } = string.Empty;
         public bool IsOverdue { get; set; }
     }
-}
+}*/

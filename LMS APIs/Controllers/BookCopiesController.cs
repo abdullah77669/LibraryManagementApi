@@ -1,5 +1,6 @@
 using LMS_APIs.Models;
 using LMS_APIs.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS_APIs.Controllers
@@ -31,6 +32,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Librarian")]
         public async Task<ActionResult<BookCopies>> PostCopy(BookCopies copy)
         {
             var result = await _bookCopyService.CreateCopyAsync(copy);
@@ -39,6 +41,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Librarian")]
         public async Task<IActionResult> UpdateCopy(int id, BookCopies copy)
         {
             var result = await _bookCopyService.UpdateCopyAsync(id, copy);
@@ -47,6 +50,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Librarian")]
         public async Task<IActionResult> DeleteCopy(int id)
         {
             var result = await _bookCopyService.DeleteCopyAsync(id);

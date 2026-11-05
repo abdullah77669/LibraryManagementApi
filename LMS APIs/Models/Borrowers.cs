@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace LMS_APIs.Models
 {
@@ -32,5 +33,9 @@ namespace LMS_APIs.Models
         [Required]
         [MaxLength(30)]
         public required string Role { get; set; }
+
+        [MaxLength(500)]
+        [JsonIgnore]
+        public string? PasswordHash { get; set; }
     }
 }

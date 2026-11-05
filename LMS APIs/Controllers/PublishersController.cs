@@ -1,5 +1,6 @@
 using LMS_APIs.Models;
 using LMS_APIs.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS_APIs.Controllers
@@ -30,6 +31,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Librarian")]
         public async Task<ActionResult<Publishers>> PostPublisher(Publishers publisher)
         {
             var result = await _publisherService.CreatePublisherAsync(publisher);
@@ -38,6 +40,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Librarian")]
         public async Task<IActionResult> UpdatePublisher(int id, Publishers publisher)
         {
             var result = await _publisherService.UpdatePublisherAsync(id, publisher);
@@ -46,6 +49,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Librarian")]
         public async Task<IActionResult> DeletePublisher(int id)
         {
             var result = await _publisherService.DeletePublisherAsync(id);

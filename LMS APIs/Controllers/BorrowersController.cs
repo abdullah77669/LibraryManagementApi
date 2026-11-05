@@ -1,5 +1,6 @@
 using LMS_APIs.Models;
 using LMS_APIs.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS_APIs.Controllers
@@ -31,6 +32,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Librarian")]
         public async Task<ActionResult<Borrowers>> PostBorrower(Borrowers borrower)
         {
             var result = await _borrowerService.CreateBorrowerAsync(borrower);
@@ -39,6 +41,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Librarian")]
         public async Task<IActionResult> UpdateBorrower(string id, Borrowers borrower)
         {
             var result = await _borrowerService.UpdateBorrowerAsync(id, borrower);
@@ -47,6 +50,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Librarian")]
         public async Task<IActionResult> DeleteBorrower(string id)
         {
             var result = await _borrowerService.DeleteBorrowerAsync(id);

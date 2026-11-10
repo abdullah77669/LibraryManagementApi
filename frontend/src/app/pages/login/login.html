@@ -1,0 +1,22 @@
+<main class="card">
+  <h1>Library Management</h1>
+  <h2>Sign in</h2>
+  <form #loginForm="ngForm" (ngSubmit)="submit(loginForm)">
+    <label>User ID <input name="userID" [(ngModel)]="userID" required #userIdField="ngModel" [class.invalid]="userIdField.invalid && userIdField.touched" /></label>
+    <p class="field-error" *ngIf="userIdField.invalid && userIdField.touched">User ID is required.</p>
+    <label>Password <input name="password" type="password" [(ngModel)]="password" minlength="8" required #passwordField="ngModel" [class.invalid]="passwordField.invalid && passwordField.touched" /></label>
+    <p class="field-error" *ngIf="passwordField.errors?.['required'] && passwordField.touched">Password is required.</p>
+    <p class="field-error" *ngIf="passwordField.errors?.['minlength'] && passwordField.touched">Password must be at least 8 characters.</p>
+    <p class="error" *ngIf="error()">{{ error() }}</p>
+    <button type="submit" [disabled]="loading()">{{ loading() ? 'Signing in…' : 'Sign in' }}</button>
+  </form>
+  <a routerLink="/register">Create an account</a>
+</main>
+
+<div class="modal-backdrop" *ngIf="showError()" role="presentation" (click)="closeError()">
+  <section class="error-modal" role="alertdialog" aria-modal="true" aria-labelledby="login-error-title" (click)="$event.stopPropagation()">
+    <h2 id="login-error-title">Sign-in failed</h2>
+    <p>{{ error() }}</p>
+    <button type="button" (click)="closeError()">OK</button>
+  </section>
+</div>

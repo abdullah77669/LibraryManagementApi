@@ -1,0 +1,8 @@
+<main class="content">
+  <header>
+    <div><h1>Library</h1><p>Authenticated API response</p></div>
+    <button (click)="logout()">Sign out</button>
+  </header>
+  <p class="error" *ngIf="error">{{ error }}</p>
+  <pre *ngIf="books !== null">{{ books | json }}</pre>
+</main>

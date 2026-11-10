@@ -1,0 +1,30 @@
+<main class="card">
+  <h1>Create account</h1>
+  <form #registerForm="ngForm" (ngSubmit)="submit(registerForm)">
+    <label>User ID <input name="userID" [(ngModel)]="form.userID" required #userIdField="ngModel" [class.invalid]="userIdField.invalid && userIdField.touched" /></label>
+    <p class="field-error" *ngIf="userIdField.invalid && userIdField.touched">User ID is required.</p>
+    <label>Full name <input name="fullName" [(ngModel)]="form.fullName" required #fullNameField="ngModel" [class.invalid]="fullNameField.invalid && fullNameField.touched" /></label>
+    <p class="field-error" *ngIf="fullNameField.invalid && fullNameField.touched">Full name is required.</p>
+    <label>Email <input name="email" type="email" pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$" [(ngModel)]="form.email" required #emailField="ngModel" [class.invalid]="emailField.invalid && emailField.touched" /></label>
+    <p class="field-error" *ngIf="emailField.errors?.['required'] && emailField.touched">Email is required.</p>
+    <p class="field-error" *ngIf="(emailField.errors?.['email'] || emailField.errors?.['pattern']) && emailField.touched">Enter an email like name@example.com.</p>
+    <label>Phone <input name="phoneNumber" type="tel" [(ngModel)]="form.phoneNumber" required pattern="[0-9+()\-\s]+" #phoneField="ngModel" [class.invalid]="phoneField.invalid && phoneField.touched" /></label>
+    <p class="field-error" *ngIf="phoneField.invalid && phoneField.touched">Enter a valid phone number using digits only.</p>
+    <label>Address <input name="address" [(ngModel)]="form.address" required #addressField="ngModel" [class.invalid]="addressField.invalid && addressField.touched" /></label>
+    <p class="field-error" *ngIf="addressField.invalid && addressField.touched">Address is required.</p>
+    <label>Password <input name="password" type="password" [(ngModel)]="form.password" minlength="8" required #passwordField="ngModel" [class.invalid]="passwordField.invalid && passwordField.touched" /></label>
+    <p class="field-error" *ngIf="passwordField.invalid && passwordField.touched">Password must be at least 8 characters.</p>
+    <p class="success" *ngIf="success()">{{ success() }}</p>
+    <p class="error" *ngIf="error()">{{ error() }}</p>
+    <button type="submit" [disabled]="loading()">{{ loading() ? 'Registering…' : 'Register' }}</button>
+  </form>
+  <a routerLink="/login">Back to sign in</a>
+</main>
+
+<div class="modal-backdrop" *ngIf="showError()" role="presentation" (click)="closeError()">
+  <section class="error-modal" role="alertdialog" aria-modal="true" aria-labelledby="register-error-title" (click)="$event.stopPropagation()">
+    <h2 id="register-error-title">Unable to sign up</h2>
+    <p>{{ error() }}</p>
+    <button type="button" (click)="closeError()">OK</button>
+  </section>
+</div>

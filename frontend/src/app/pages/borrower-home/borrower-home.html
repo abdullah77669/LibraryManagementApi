@@ -1,0 +1,89 @@
+<div class="reader-page">
+  <div class="reader-topline">
+    <div class="reader-shell topline-content">
+      <span>YOUR COMMUNITY LIBRARY</span>
+      <span>Discover something worth reading</span>
+    </div>
+  </div>
+
+  <header class="reader-header reader-shell">
+    <a class="brand" routerLink="/borrower" aria-label="Library home">
+      <span class="brand-mark" aria-hidden="true">L</span>
+      <span><strong>THE READING ROOM</strong><small>Books for curious minds</small></span>
+    </a>
+    <nav class="reader-nav" aria-label="Main navigation">
+      <a href="#browse">Browse books</a>
+      <a href="#discover">Discover</a>
+    </nav>
+    <div class="reader-actions">
+      <span class="reader-name">Hello, {{ userID }}</span>
+      <button class="signout-button" type="button" (click)="logout()">Sign out</button>
+    </div>
+  </header>
+
+  <main class="reader-shell reader-main">
+    <section class="welcome-panel" id="discover">
+      <div class="welcome-copy">
+        <p class="eyebrow">A good book is waiting</p>
+        <h1>Welcome to your library.</h1>
+        <p>Explore the shelves, find a new favorite, and let your next story begin.</p>
+        <a class="browse-button" href="#browse">Explore the collection <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="welcome-art" aria-hidden="true">
+        <span class="art-sun"></span>
+        <span class="art-book book-one"></span>
+        <span class="art-book book-two"></span>
+        <span class="art-book book-three"></span>
+        <span class="art-shelf"></span>
+      </div>
+    </section>
+
+    <section class="browse-section" id="browse">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Find your next read</p>
+          <h2>Browse the collection</h2>
+        </div>
+        <span class="book-count" *ngIf="!loading()">{{ books().length }} titles</span>
+      </div>
+
+      <label class="search-box">
+        <span aria-hidden="true">⌕</span>
+        <input type="search" placeholder="Search by title, author, or category" [value]="search()" (input)="setSearch($any($event.target).value)" />
+      </label>
+
+      <div class="category-list" aria-label="Filter by category">
+        <button *ngFor="let category of categories()" type="button" [class.active]="selectedCategory() === category" (click)="chooseCategory(category)">{{ category }}</button>
+      </div>
+
+      <div class="catalog-message" *ngIf="loading()" role="status">Gathering books for you…</div>
+      <div class="catalog-error" *ngIf="error()" role="alert">
+        <p>{{ error() }}</p>
+        <button type="button" (click)="loadBooks()">Try again</button>
+      </div>
+      <div class="book-grid" *ngIf="!loading() && !error() && filteredBooks().length">
+        <article class="book-card" *ngFor="let book of filteredBooks(); let i = index">
+          <div class="book-cover" [class.cover-a]="i % 4 === 0" [class.cover-b]="i % 4 === 1" [class.cover-c]="i % 4 === 2" [class.cover-d]="i % 4 === 3">
+            <span class="cover-rule"></span>
+            <span class="cover-title">{{ book.title }}</span>
+            <span class="cover-author">{{ book.authorName }}</span>
+          </div>
+          <div class="book-info">
+            <p class="book-category">{{ book.categoryName || 'Library collection' }}</p>
+            <h3>{{ book.title }}</h3>
+            <p class="book-author">{{ book.authorName || 'Author not listed' }}</p>
+            <p class="availability" [class.unavailable]="book.availableCopies < 1">
+              {{ book.availableCopies > 0 ? book.availableCopies + ' available' : 'Currently unavailable' }}
+            </p>
+          </div>
+        </article>
+      </div>
+      <div class="empty-state" *ngIf="!loading() && !error() && !filteredBooks().length">
+        <h3>No matching books found</h3>
+        <p>Try a different search or choose another category.</p>
+      </div>
+    </section>
+
+    <footer class="reader-footer">A little reading can take you a long way.</footer>
+  </main>
+</div>

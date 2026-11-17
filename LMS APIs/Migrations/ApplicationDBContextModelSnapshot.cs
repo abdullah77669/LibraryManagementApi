@@ -41,6 +41,10 @@ namespace LMS_APIs.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(2048)
+                        .HasColumnType("nvarchar(2048)");
+
                     b.Property<string>("ISBN")
                         .IsRequired()
                         .HasMaxLength(50)

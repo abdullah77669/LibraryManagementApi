@@ -1,0 +1,50 @@
+<section class="catalog-management">
+  <div class="catalog-heading">
+    <div><p class="eyebrow">Staff workspace</p><h2>Catalog management</h2></div>
+    <button class="primary-button" type="button" (click)="openCreate()">Add {{ currentConfig().singular.toLowerCase() }}</button>
+  </div>
+
+  <nav class="resource-tabs" aria-label="Catalog types">
+    <button *ngFor="let resource of resources" type="button" [class.active]="selectedResource() === resource.key" (click)="selectResource(resource.key)">{{ resource.label }}</button>
+  </nav>
+
+  <p class="success-message" *ngIf="message()" role="status">{{ message() }}</p>
+  <div class="error-state" *ngIf="error()" role="alert">{{ error() }}</div>
+  <p class="loading-state" *ngIf="loading()" role="status">Loading {{ currentConfig().label.toLowerCase() }}…</p>
+
+  <div class="table-wrap" *ngIf="!loading() && !error()">
+    <table *ngIf="rows().length; else noRecords">
+      <thead><tr><th>ID</th><th>{{ currentConfig().singular }}</th><th>Details</th><th>Actions</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let row of rows()">
+          <td>{{ row.id }}</td><td>{{ row.title }}</td><td>{{ row.subtitle || '—' }}</td>
+          <td class="row-actions"><button type="button" (click)="openEdit(row.record)">Edit</button><button class="delete-button" type="button" (click)="delete(row.record)">Delete</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-template #noRecords><p class="empty-state">No {{ currentConfig().label.toLowerCase() }} found yet.</p></ng-template>
+  </div>
+
+  <div class="editor-backdrop" *ngIf="editorOpen()" role="presentation" (click)="closeEditor()">
+    <section class="editor-dialog" role="dialog" aria-modal="true" aria-labelledby="editor-title" (click)="$event.stopPropagation()">
+      <button class="close-button" type="button" aria-label="Close form" (click)="closeEditor()">×</button>
+      <h2 id="editor-title">{{ editingID() === null ? 'Add' : 'Edit' }} {{ currentConfig().singular }}</h2>
+      <form #editor="ngForm" (ngSubmit)="save()">
+        <label *ngFor="let field of currentFields()">{{ field.label }}
+          <select *ngIf="field.type === 'select'; else nonSelect" [name]="field.name" [ngModel]="form()[field.name]" (ngModelChange)="updateField(field.name, $event)" [required]="field.required ?? false">
+            <option [ngValue]="null" disabled>Select {{ field.label.toLowerCase() }}</option>
+            <option *ngFor="let option of options(field)" [ngValue]="option.value">{{ option.label }}</option>
+          </select>
+          <ng-template #nonSelect>
+            <textarea *ngIf="field.type === 'textarea'; else inputField" [name]="field.name" [ngModel]="form()[field.name]" (ngModelChange)="updateField(field.name, $event)" [required]="field.required ?? false" [attr.maxlength]="field.maxLength || null" rows="3"></textarea>
+          </ng-template>
+          <ng-template #inputField>
+            <input [name]="field.name" [type]="field.type" [ngModel]="form()[field.name]" (ngModelChange)="updateField(field.name, $event)" [required]="field.required ?? false" [attr.maxlength]="field.maxLength || null" [min]="field.type === 'number' ? 1 : null" />
+          </ng-template>
+        </label>
+        <p class="error-state" *ngIf="error()" role="alert">{{ error() }}</p>
+        <div class="editor-actions"><button class="secondary-button" type="button" (click)="closeEditor()">Cancel</button><button class="primary-button" type="submit" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Save' }}</button></div>
+      </form>
+    </section>
+  </div>
+</section>

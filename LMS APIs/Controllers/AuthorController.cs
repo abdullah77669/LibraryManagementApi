@@ -8,7 +8,6 @@ namespace LMS_APIs.Controllers
 {
     [Route("api/authors")]
     [ApiController]
-    [Authorize(Roles = "Admin,Librarian")]
     public class AuthorController : ControllerBase
     {
         private readonly IAuthor _authorService;
@@ -19,12 +18,14 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IEnumerable<Author> GetAuthors()
         {
             return _authorService.GetAuthors();
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public ActionResult<Author> GetAuthorById(int id)
         {
             var author = _authorService.GetAuthorById(id);

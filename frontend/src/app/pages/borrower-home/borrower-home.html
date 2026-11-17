@@ -14,10 +14,13 @@
     <nav class="reader-nav" aria-label="Main navigation">
       <a href="#browse">Browse books</a>
       <a href="#discover">Discover</a>
+      <a href="#my-books" (click)="openMyBooks($event)">My Books</a>
+      <a *ngIf="isStaff()" routerLink="/library">Staff dashboard</a>
     </nav>
     <div class="reader-actions">
-      <span class="reader-name">Hello, {{ userID }}</span>
-      <button class="signout-button" type="button" (click)="logout()">Sign out</button>
+      <span class="reader-name" *ngIf="userID()">Hello, {{ userID() }}</span>
+      <a class="signup-link" *ngIf="!userID()" routerLink="/register">Create an account</a>
+      <button class="signout-button" *ngIf="userID()" type="button" (click)="logout()">Sign out</button>
     </div>
   </header>
 
@@ -63,11 +66,16 @@
       </div>
       <div class="book-grid" *ngIf="!loading() && !error() && filteredBooks().length">
         <article class="book-card" *ngFor="let book of filteredBooks(); let i = index">
-          <div class="book-cover" [class.cover-a]="i % 4 === 0" [class.cover-b]="i % 4 === 1" [class.cover-c]="i % 4 === 2" [class.cover-d]="i % 4 === 3">
-            <span class="cover-rule"></span>
-            <span class="cover-title">{{ book.title }}</span>
-            <span class="cover-author">{{ book.authorName }}</span>
+          <div class="book-cover-image" *ngIf="shouldShowCoverImage(book); else generatedCover">
+            <img [src]="book.imageUrl" [alt]="'Cover of ' + book.title" loading="lazy" (error)="onCoverImageError(book.bookID)" />
           </div>
+          <ng-template #generatedCover>
+            <div class="book-cover" [class.cover-a]="i % 4 === 0" [class.cover-b]="i % 4 === 1" [class.cover-c]="i % 4 === 2" [class.cover-d]="i % 4 === 3">
+              <span class="cover-rule"></span>
+              <span class="cover-title">{{ book.title }}</span>
+              <span class="cover-author">{{ book.authorName }}</span>
+            </div>
+          </ng-template>
           <div class="book-info">
             <p class="book-category">{{ book.categoryName || 'Library collection' }}</p>
             <h3>{{ book.title }}</h3>
@@ -75,6 +83,9 @@
             <p class="availability" [class.unavailable]="book.availableCopies < 1">
               {{ book.availableCopies > 0 ? book.availableCopies + ' available' : 'Currently unavailable' }}
             </p>
+            <button class="borrow-button" type="button" [disabled]="book.availableCopies < 1 || borrowingBookID() === book.bookID" (click)="borrowBook(book)">
+              {{ borrowingBookID() === book.bookID ? 'Borrowing…' : book.availableCopies > 0 ? 'Borrow' : 'Unavailable' }}
+            </button>
           </div>
         </article>
       </div>
@@ -82,8 +93,53 @@
         <h3>No matching books found</h3>
         <p>Try a different search or choose another category.</p>
       </div>
+      <p class="borrow-message" [class.borrow-error]="borrowError()" *ngIf="borrowMessage()" role="status">{{ borrowMessage() }}</p>
     </section>
 
     <footer class="reader-footer">A little reading can take you a long way.</footer>
   </main>
+</div>
+
+<div class="borrow-dialog-backdrop" *ngIf="borrowPromptBook()" role="presentation" (click)="closeBorrowPrompt()">
+  <section class="borrow-dialog" role="alertdialog" aria-modal="true" aria-labelledby="borrow-dialog-title" (click)="$event.stopPropagation()">
+    <h2 id="borrow-dialog-title">Sign in to borrow</h2>
+    <p>You need to be signed in to borrow “{{ borrowPromptBook()?.title }}”.</p>
+    <div class="borrow-dialog-actions">
+      <button class="cancel-button" type="button" (click)="closeBorrowPrompt()">Cancel</button>
+      <button class="borrow-button" type="button" (click)="goToSignIn()">Sign in</button>
+    </div>
+  </section>
+</div>
+
+<div class="borrow-dialog-backdrop" *ngIf="signupOpen()" role="presentation" (click)="closeSignup()">
+  <section class="borrow-dialog signup-dialog" role="dialog" aria-modal="true" aria-labelledby="signup-dialog-title" (click)="$event.stopPropagation()">
+    <button class="dialog-close" type="button" aria-label="Close signup form" (click)="closeSignup()">×</button>
+    <h2 id="signup-dialog-title">Create your borrower account</h2>
+    <form #signup="ngForm" (ngSubmit)="submitSignup(signup)">
+      <label>User ID
+        <input name="userID" [(ngModel)]="signupForm.userID" maxlength="50" required />
+      </label>
+      <label>Full name
+        <input name="fullName" [(ngModel)]="signupForm.fullName" maxlength="100" required />
+      </label>
+      <label>Email
+        <input name="email" type="email" [(ngModel)]="signupForm.email" maxlength="255" required />
+      </label>
+      <label>Phone number
+        <input name="phoneNumber" type="tel" [(ngModel)]="signupForm.phoneNumber" maxlength="15" required />
+      </label>
+      <label>Address
+        <textarea name="address" [(ngModel)]="signupForm.address" required rows="2"></textarea>
+      </label>
+      <label>Password
+        <input name="password" type="password" [(ngModel)]="signupForm.password" minlength="8" required />
+      </label>
+      <p class="borrow-error" *ngIf="signupError()" role="alert">{{ signupError() }}</p>
+      <p class="signup-success" *ngIf="signupSuccess()" role="status">{{ signupSuccess() }}</p>
+      <button class="borrow-button signup-submit" type="submit" [disabled]="signupLoading()">
+        {{ signupLoading() ? 'Creating account…' : 'Sign up' }}
+      </button>
+    </form>
+    <p class="signin-prompt">Already have an account? <a routerLink="/login" (click)="closeSignup()">Sign in</a></p>
+  </section>
 </div>

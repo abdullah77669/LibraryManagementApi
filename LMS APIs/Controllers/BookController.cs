@@ -8,7 +8,6 @@ namespace LMS_APIs.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles="Admin,Librarian")]
     public class BookController : ControllerBase
     {
         private readonly IBook _bookService;
@@ -18,6 +17,7 @@ namespace LMS_APIs.Controllers
             _bookService = bookService;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public IEnumerable<Book> GetBooks()
         {
@@ -26,6 +26,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpGet("GetAllBookList")]
+        [AllowAnonymous]
         public List<Book> GetAllBookList()
         {
             return _bookService.GetAllBookList();
@@ -35,6 +36,7 @@ namespace LMS_APIs.Controllers
 
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public ActionResult<Book> GetBookById(int id)
         {
             var book = _bookService.GetBookById(id);

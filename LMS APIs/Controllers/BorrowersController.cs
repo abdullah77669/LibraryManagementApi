@@ -7,6 +7,7 @@ namespace LMS_APIs.Controllers
 {
     [Route("api/borrowers")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class BorrowersController : ControllerBase
     {
         private readonly IBorrower _borrowerService;
@@ -32,7 +33,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin,Librarian")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Borrowers>> PostBorrower(Borrowers borrower)
         {
             var result = await _borrowerService.CreateBorrowerAsync(borrower);
@@ -41,7 +42,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin,Librarian")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateBorrower(string id, Borrowers borrower)
         {
             var result = await _borrowerService.UpdateBorrowerAsync(id, borrower);
@@ -50,7 +51,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin,Librarian")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteBorrower(string id)
         {
             var result = await _borrowerService.DeleteBorrowerAsync(id);

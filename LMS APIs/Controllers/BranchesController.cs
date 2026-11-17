@@ -17,12 +17,14 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Branch>>> GetBranches()
         {
             return Ok(await _branchService.GetBranchesAsync());
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Branch>> GetBranchById(int id)
         {
             var branch = await _branchService.GetBranchByIdAsync(id);
@@ -31,7 +33,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin,Librarian")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Branch>> PostBranch(Branch branch)
         {
             var result = await _branchService.CreateBranchAsync(branch);
@@ -40,7 +42,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin,Librarian")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateBranch(int id, Branch branch)
         {
             var result = await _branchService.UpdateBranchAsync(id, branch);
@@ -49,7 +51,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin,Librarian")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteBranch(int id)
         {
             var result = await _branchService.DeleteBranchAsync(id);

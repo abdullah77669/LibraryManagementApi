@@ -18,13 +18,14 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<BookCategory>>> GetCategories()
         {
             return Ok(await _context.Categories.AsNoTracking().OrderBy(c => c.CategoryName).ToListAsync());
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin,Librarian")]
+        [AllowAnonymous]
         public async Task<ActionResult<BookCategory>> GetCategoryById(int id)
         {
             var category = await _context.Categories.FindAsync(id);

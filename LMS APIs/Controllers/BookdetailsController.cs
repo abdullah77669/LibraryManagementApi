@@ -1,6 +1,7 @@
 using LMS_APIs.Data;
 using LMS_APIs.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace LMS_APIs.Controllers
@@ -29,6 +30,7 @@ namespace LMS_APIs.Controllers
                        BookID = b.BookID,
                        Title = b.Title,
                        ISBN = b.ISBN,
+                       ImageUrl = b.ImageUrl,
                        Language = b.Language,
                        Excerpts = b.Excerpts,
                        PublishDate = b.PublishDate,
@@ -46,6 +48,7 @@ namespace LMS_APIs.Controllers
 
         // GET api/book-details?search=harry
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<BookDetails>>> GetBookDetails([FromQuery] string? search)
         {
             var query = BuildQuery();
@@ -59,6 +62,7 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<BookDetails>> GetBookDetailsById(int id)
         {
             var book = await BuildQuery().AsNoTracking().FirstOrDefaultAsync(x => x.BookID == id);

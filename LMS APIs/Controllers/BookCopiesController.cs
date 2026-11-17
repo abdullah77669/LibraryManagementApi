@@ -18,12 +18,14 @@ namespace LMS_APIs.Controllers
 
         // GET api/bookcopies?bookId=1&branchId=2
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<BookCopies>>> GetCopies([FromQuery] int? bookId, [FromQuery] int? branchId)
         {
             return Ok(await _bookCopyService.GetCopiesAsync(bookId, branchId));
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<BookCopies>> GetCopyById(int id)
         {
             var copy = await _bookCopyService.GetCopyByIdAsync(id);

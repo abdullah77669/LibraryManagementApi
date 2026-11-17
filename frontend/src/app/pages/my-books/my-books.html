@@ -1,0 +1,69 @@
+<main class="my-books-page">
+  <header class="my-books-header">
+    <a class="brand" routerLink="/borrower" aria-label="Library home">
+      <span class="brand-mark" aria-hidden="true">L</span>
+      <span><strong>THE READING ROOM</strong><small>Books for curious minds</small></span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a routerLink="/borrower">Browse books</a>
+      <span aria-current="page">My Books</span>
+    </nav>
+    <div class="account-actions">
+      <span>Hello, {{ userID() }}</span>
+      <button type="button" (click)="logout()">Sign out</button>
+    </div>
+  </header>
+
+  <section class="my-books-content">
+    <p class="eyebrow">Your reading shelf</p>
+    <h1>My Books</h1>
+    <p class="intro">See what you are currently reading and revisit your returned books.</p>
+
+    <p class="state-message" *ngIf="loading()" role="status">Loading your books…</p>
+    <div class="error-state" *ngIf="error()" role="alert">
+      <p>{{ error() }}</p>
+      <button type="button" (click)="loadLoans()">Try again</button>
+    </div>
+    <div class="empty-state" *ngIf="!loading() && !error() && !loans().length">
+      <h2>No borrowed books yet</h2>
+      <p>Browse the collection and borrow a book to see it here.</p>
+      <a routerLink="/borrower">Browse books</a>
+    </div>
+
+    <section class="loan-section" *ngIf="!loading() && !error() && currentLoans().length">
+      <h2>Currently borrowed <span>{{ currentLoans().length }}</span></h2>
+      <div class="loan-grid">
+        <article class="loan-card" *ngFor="let loan of currentLoans()">
+          <div class="loan-card-top">
+            <span class="status-pill" [class.overdue-pill]="loan.isOverdue">{{ loan.isOverdue ? 'Overdue' : 'On loan' }}</span>
+            <span class="loan-number">Loan #{{ loan.loanID }}</span>
+          </div>
+          <h3>{{ loan.bookTitle }}</h3>
+          <p class="branch-name">{{ loan.branchName }}</p>
+          <dl>
+            <div><dt>Borrowed</dt><dd>{{ loan.loanDate | date:'mediumDate' }}</dd></div>
+            <div><dt>Due date</dt><dd [class.overdue-text]="loan.isOverdue">{{ loan.dueDate | date:'mediumDate' }}</dd></div>
+          </dl>
+        </article>
+      </div>
+    </section>
+
+    <section class="loan-section" *ngIf="!loading() && !error() && returnedLoans().length">
+      <h2>Returned books <span>{{ returnedLoans().length }}</span></h2>
+      <div class="loan-grid">
+        <article class="loan-card returned-card" *ngFor="let loan of returnedLoans()">
+          <div class="loan-card-top">
+            <span class="status-pill returned-pill">Returned</span>
+            <span class="loan-number">Loan #{{ loan.loanID }}</span>
+          </div>
+          <h3>{{ loan.bookTitle }}</h3>
+          <p class="branch-name">{{ loan.branchName }}</p>
+          <dl>
+            <div><dt>Borrowed</dt><dd>{{ loan.loanDate | date:'mediumDate' }}</dd></div>
+            <div><dt>Returned</dt><dd>{{ loan.returnDate ? (loan.returnDate | date:'mediumDate') : '—' }}</dd></div>
+          </dl>
+        </article>
+      </div>
+    </section>
+  </section>
+</main>

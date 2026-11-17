@@ -29,6 +29,7 @@ namespace LMS_APIs.Models
         public int BookID { get; set; }
         public string Title { get; set; } = string.Empty;
         public string ISBN { get; set; } = string.Empty;
+        public string? ImageUrl { get; set; }
         public string Language { get; set; } = string.Empty;
         public string Excerpts { get; set; } = string.Empty;
         public DateTime PublishDate { get; set; }

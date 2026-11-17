@@ -1,8 +1,41 @@
-<main class="content">
-  <header>
-    <div><h1>Library</h1><p>Authenticated API response</p></div>
-    <button (click)="logout()">Sign out</button>
+<main class="staff-page">
+  <header class="staff-header">
+    <a class="staff-brand" routerLink="/borrower"><span class="brand-mark">L</span><span><strong>THE READING ROOM</strong><small>Library management</small></span></a>
+    <div class="staff-account"><span>{{ isAdmin() ? 'Administrator' : 'Librarian' }}</span><button type="button" (click)="logout()">Sign out</button></div>
   </header>
-  <p class="error" *ngIf="error">{{ error }}</p>
-  <pre *ngIf="books !== null">{{ books | json }}</pre>
+
+  <nav class="staff-nav" aria-label="Management sections">
+    <button type="button" [class.active]="selectedSection() === 'dashboard'" (click)="selectedSection.set('dashboard')">Dashboard</button>
+    <button type="button" [class.active]="selectedSection() === 'catalog'" (click)="selectedSection.set('catalog')">Catalog</button>
+    <button type="button" [class.active]="selectedSection() === 'loans'" (click)="selectedSection.set('loans')">Loans</button>
+    <button *ngIf="isAdmin()" type="button" [class.active]="selectedSection() === 'borrowers'" (click)="selectedSection.set('borrowers')">Borrowers</button>
+    <button *ngIf="isAdmin()" type="button" [class.active]="selectedSection() === 'branches'" (click)="selectedSection.set('branches')">Branches</button>
+  </nav>
+
+  <section class="dashboard-content" *ngIf="selectedSection() === 'dashboard'">
+    <p class="eyebrow">{{ isAdmin() ? 'Administration' : 'Staff workspace' }}</p>
+    <h1>Dashboard</h1>
+    <p class="dashboard-intro">A quick overview of your library.</p>
+
+    <div class="loading-state" *ngIf="loading()" role="status">Loading dashboard…</div>
+    <div class="error-state" *ngIf="error()" role="alert">
+      <p>{{ error() }}</p>
+      <button type="button" (click)="loadDashboard()">Try again</button>
+    </div>
+
+    <div class="summary-grid" *ngIf="!loading() && !error()">
+      <article class="summary-card"><span class="summary-icon">B</span><p>Book titles</p><strong>{{ titleCount() }}</strong></article>
+      <article class="summary-card"><span class="summary-icon">C</span><p>Available copies</p><strong>{{ availableCopies() }}</strong></article>
+      <article class="summary-card"><span class="summary-icon">L</span><p>Active loans</p><strong>{{ activeLoans() }}</strong></article>
+      <article class="summary-card" [class.attention-card]="overdueLoans() > 0"><span class="summary-icon">!</span><p>Overdue loans</p><strong>{{ overdueLoans() }}</strong></article>
+      <article class="summary-card admin-summary" *ngIf="isAdmin()"><span class="summary-icon">R</span><p>Borrowers</p><strong>{{ borrowerCount() }}</strong></article>
+      <article class="summary-card admin-summary" *ngIf="isAdmin()"><span class="summary-icon">S</span><p>Branches</p><strong>{{ branchCount() }}</strong></article>
+    </div>
+
+    <a class="catalog-link" routerLink="/borrower">View public book catalog</a>
+  </section>
+  <app-catalog-management *ngIf="selectedSection() === 'catalog'" />
+  <section class="dashboard-content" *ngIf="selectedSection() === 'loans'"><h1>Loans</h1><p>Loan workflows are being added.</p></section>
+  <section class="dashboard-content" *ngIf="selectedSection() === 'borrowers'"><h1>Borrowers</h1><p>Borrower management is being added.</p></section>
+  <section class="dashboard-content" *ngIf="selectedSection() === 'branches'"><h1>Branches</h1><p>Branch management is being added.</p></section>
 </main>

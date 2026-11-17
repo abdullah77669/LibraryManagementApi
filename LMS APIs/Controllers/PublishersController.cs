@@ -17,12 +17,14 @@ namespace LMS_APIs.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Publishers>>> GetPublishers()
         {
             return Ok(await _publisherService.GetPublishersAsync());
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Publishers>> GetPublisherById(int id)
         {
             var publisher = await _publisherService.GetPublisherByIdAsync(id);

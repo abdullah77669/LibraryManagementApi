@@ -4,8 +4,9 @@ import { AuthService } from '../services/auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = inject(AuthService).token;
+  const isPublicCatalogRequest = req.method === 'GET' && new URL(req.url).pathname.endsWith('/book-details');
 
-  if (!token || req.url.endsWith('/Users/login') || req.url.endsWith('/Users/register')) {
+  if (!token || isPublicCatalogRequest || req.url.endsWith('/Users/login') || req.url.endsWith('/Users/register')) {
     return next(req);
   }
 

@@ -33,6 +33,9 @@ namespace LMS_APIs.Models
         [MaxLength(2000)]
         public required string Excerpts { get; set; }
 
+        [MaxLength(2048)]
+        public string? ImageUrl { get; set; }
+
         public DateTime PublishDate { get; set; }
 
     }

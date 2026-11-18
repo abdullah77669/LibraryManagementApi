@@ -1,0 +1,35 @@
+<section class="staff-records">
+  <div class="records-heading"><div><p class="eyebrow">Admin only</p><h2>Borrowers</h2></div><button class="primary-button" type="button" (click)="openCreate()">Add borrower</button></div>
+  <label class="search-field">Search borrowers<input type="search" [value]="search()" (input)="setSearch($any($event.target).value)" placeholder="Name, email, or user ID" /></label>
+  <p class="success-message" *ngIf="message()" role="status">{{ message() }}</p>
+  <p class="error-message" *ngIf="error()" role="alert">{{ error() }}</p>
+  <p class="loading-message" *ngIf="loading()" role="status">Loading borrowers…</p>
+  <div class="table-wrap" *ngIf="!loading() && !error()">
+    <table *ngIf="borrowers().length; else noBorrowers">
+      <thead><tr><th>User ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody><tr *ngFor="let borrower of borrowers()">
+        <td>{{ borrower.userID }}</td><td>{{ borrower.fullName }}</td><td>{{ borrower.email }}</td><td>{{ borrower.phoneNumber }}</td><td>{{ borrower.status }}</td>
+        <td class="row-actions"><button type="button" (click)="openEdit(borrower)">Edit</button><button class="delete-button" type="button" (click)="delete(borrower)">Delete</button></td>
+      </tr></tbody>
+    </table>
+    <ng-template #noBorrowers><p class="empty-state">No borrowers found.</p></ng-template>
+  </div>
+
+  <div class="editor-backdrop" *ngIf="editorOpen()" role="presentation" (click)="closeEditor()">
+    <section class="editor-dialog" role="dialog" aria-modal="true" aria-labelledby="borrower-editor-title" (click)="$event.stopPropagation()">
+      <button class="close-button" type="button" aria-label="Close form" (click)="closeEditor()">×</button>
+      <h3 id="borrower-editor-title">{{ editingID() === null ? 'Create borrower account' : 'Edit borrower' }}</h3>
+      <form #borrowerForm="ngForm" (ngSubmit)="save(borrowerForm)">
+        <label>User ID<input name="userID" [(ngModel)]="form.userID" maxlength="50" required [readonly]="editingID() !== null" /></label>
+        <label>Full name<input name="fullName" [(ngModel)]="form.fullName" maxlength="100" required /></label>
+        <label>Email<input name="email" type="email" [(ngModel)]="form.email" maxlength="255" required /></label>
+        <label>Phone<input name="phoneNumber" type="tel" [(ngModel)]="form.phoneNumber" maxlength="15" required /></label>
+        <label>Address<textarea name="address" [(ngModel)]="form.address" required rows="2"></textarea></label>
+        <label *ngIf="editingID() === null">Temporary password<input name="password" type="password" [(ngModel)]="form.password" minlength="8" required /></label>
+        <label *ngIf="editingID() !== null">Status<select name="status" [(ngModel)]="form.status" required><option>Active</option><option>Inactive</option></select></label>
+        <p class="error-message" *ngIf="error()" role="alert">{{ error() }}</p>
+        <div class="editor-actions"><button class="secondary-button" type="button" (click)="closeEditor()">Cancel</button><button class="primary-button" type="submit" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Save' }}</button></div>
+      </form>
+    </section>
+  </div>
+</section>

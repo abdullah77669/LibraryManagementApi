@@ -1,0 +1,26 @@
+.branch-management { margin: 2rem auto; width: min(1180px, calc(100% - 3rem)); padding: 1.5rem; border: 1px solid #e1ddcf; border-radius: 12px; background: #fffefa; }
+.branch-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.branch-heading h2 { margin: 0; font: 1.6rem Georgia, serif; }
+.eyebrow { margin: 0 0 .35rem; color: #6a7962; font-size: .78rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.primary-button, .secondary-button, .row-actions button { padding: .6rem .9rem; border: 1px solid #45634e; border-radius: 6px; background: #45634e; color: white; font-weight: 600; cursor: pointer; }
+.secondary-button { background: transparent; color: #45634e; }
+.table-wrap { overflow-x: auto; margin-top: 1rem; }
+table { width: 100%; border-collapse: collapse; text-align: left; }
+th, td { padding: .75rem .65rem; border-bottom: 1px solid #e8e4d9; }
+th { color: #697366; font-size: .78rem; text-transform: uppercase; }
+.row-actions { display: flex; gap: .4rem; }
+.row-actions button { padding: .4rem .6rem; font-size: .8rem; }
+.row-actions .delete-button { border-color: #a64c3c; background: transparent; color: #9f4133; }
+.success-message { color: #376344; font-weight: 600; }
+.error-message { color: #9f4133; }
+.loading-message, .empty-state { padding: 1.5rem; color: #697366; text-align: center; }
+.editor-backdrop { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; padding: 1rem; background: #17201999; }
+.editor-dialog { position: relative; width: min(500px, 100%); padding: 1.5rem; border-radius: 12px; background: #fffefa; box-shadow: 0 16px 48px #0003; }
+.editor-dialog h3 { margin: 0 0 1.2rem; font: 1.5rem Georgia, serif; }
+.editor-dialog form { display: grid; gap: .8rem; }
+.editor-dialog label { display: grid; gap: .35rem; color: #43584a; font-size: .9rem; font-weight: 600; }
+.editor-dialog input, .editor-dialog textarea { width: 100%; padding: .65rem .75rem; border: 1px solid #d5d0c0; border-radius: 6px; background: white; color: #242d2a; font: inherit; }
+.editor-dialog textarea { resize: vertical; }
+.close-button { position: absolute; top: .65rem; right: .75rem; border: 0; background: transparent; color: #536257; font-size: 1.6rem; cursor: pointer; }
+.editor-actions { display: flex; justify-content: flex-end; gap: .75rem; margin-top: .5rem; }
+@media (max-width: 700px) { .branch-management { width: calc(100% - 1.5rem); padding: 1rem; } .branch-heading { align-items: flex-start; flex-direction: column; } th, td { padding: .6rem .45rem; } }

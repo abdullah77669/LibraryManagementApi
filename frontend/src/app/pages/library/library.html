@@ -5,11 +5,11 @@
   </header>
 
   <nav class="staff-nav" aria-label="Management sections">
-    <button type="button" [class.active]="selectedSection() === 'dashboard'" (click)="selectedSection.set('dashboard')">Dashboard</button>
-    <button type="button" [class.active]="selectedSection() === 'catalog'" (click)="selectedSection.set('catalog')">Catalog</button>
-    <button type="button" [class.active]="selectedSection() === 'loans'" (click)="selectedSection.set('loans')">Loans</button>
-    <button *ngIf="isAdmin()" type="button" [class.active]="selectedSection() === 'borrowers'" (click)="selectedSection.set('borrowers')">Borrowers</button>
-    <button *ngIf="isAdmin()" type="button" [class.active]="selectedSection() === 'branches'" (click)="selectedSection.set('branches')">Branches</button>
+    <button type="button" [class.active]="selectedSection() === 'dashboard'" [attr.aria-current]="selectedSection() === 'dashboard' ? 'page' : null" (click)="selectSection('dashboard')">Dashboard</button>
+    <button type="button" [class.active]="selectedSection() === 'catalog'" [attr.aria-current]="selectedSection() === 'catalog' ? 'page' : null" (click)="selectSection('catalog')">Catalog</button>
+    <button type="button" [class.active]="selectedSection() === 'loans'" [attr.aria-current]="selectedSection() === 'loans' ? 'page' : null" (click)="selectSection('loans')">Loans</button>
+    <button *ngIf="isAdmin()" type="button" [class.active]="selectedSection() === 'borrowers'" [attr.aria-current]="selectedSection() === 'borrowers' ? 'page' : null" (click)="selectSection('borrowers')">Borrowers</button>
+    <button *ngIf="isAdmin()" type="button" [class.active]="selectedSection() === 'branches'" [attr.aria-current]="selectedSection() === 'branches' ? 'page' : null" (click)="selectSection('branches')">Branches</button>
   </nav>
 
   <section class="dashboard-content" *ngIf="selectedSection() === 'dashboard'">
@@ -32,10 +32,29 @@
       <article class="summary-card admin-summary" *ngIf="isAdmin()"><span class="summary-icon">S</span><p>Branches</p><strong>{{ branchCount() }}</strong></article>
     </div>
 
+    <section class="workflow-grid" aria-label="Management workflows">
+      <article class="workflow-card">
+        <div><h2>Loan management</h2><p>Check out books, review active and returned loans, and process returns.</p></div>
+        <button type="button" (click)="selectSection('loans')">Open loans</button>
+      </article>
+      <article class="workflow-card" *ngIf="isAdmin()">
+        <div><h2>Borrower management</h2><p>Search borrower accounts, create accounts, update details, and manage status.</p></div>
+        <button type="button" (click)="selectSection('borrowers')">Open borrowers</button>
+      </article>
+      <article class="workflow-card" *ngIf="isAdmin()">
+        <div><h2>Branch management</h2><p>Create and update library branches or remove branches that are no longer in use.</p></div>
+        <button type="button" (click)="selectSection('branches')">Open branches</button>
+      </article>
+      <article class="workflow-card">
+        <div><h2>Catalog management</h2><p>Manage titles, authors, categories, publishers, and book copies.</p></div>
+        <button type="button" (click)="selectSection('catalog')">Open catalog</button>
+      </article>
+    </section>
+
     <a class="catalog-link" routerLink="/borrower">View public book catalog</a>
   </section>
   <app-catalog-management *ngIf="selectedSection() === 'catalog'" />
-  <section class="dashboard-content" *ngIf="selectedSection() === 'loans'"><h1>Loans</h1><p>Loan workflows are being added.</p></section>
-  <section class="dashboard-content" *ngIf="selectedSection() === 'borrowers'"><h1>Borrowers</h1><p>Borrower management is being added.</p></section>
-  <section class="dashboard-content" *ngIf="selectedSection() === 'branches'"><h1>Branches</h1><p>Branch management is being added.</p></section>
+  <app-loans-management *ngIf="selectedSection() === 'loans'" />
+  <app-borrower-management *ngIf="isAdmin() && selectedSection() === 'borrowers'" />
+  <app-branch-management *ngIf="isAdmin() && selectedSection() === 'branches'" />
 </main>

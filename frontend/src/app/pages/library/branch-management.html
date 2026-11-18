@@ -1,0 +1,27 @@
+<section class="branch-management">
+  <div class="branch-heading"><div><p class="eyebrow">Admin only</p><h2>Branches</h2></div><button class="primary-button" type="button" (click)="openCreate()">Add branch</button></div>
+  <p class="success-message" *ngIf="message()" role="status">{{ message() }}</p>
+  <p class="error-message" *ngIf="error()" role="alert">{{ error() }}</p>
+  <p class="loading-message" *ngIf="loading()" role="status">Loading branches…</p>
+  <div class="table-wrap" *ngIf="!loading() && !error()">
+    <table *ngIf="branches().length; else noBranches">
+      <thead><tr><th>Branch</th><th>Address</th><th>Contact</th><th>Actions</th></tr></thead>
+      <tbody><tr *ngFor="let branch of branches()"><td>{{ branch.name }}</td><td>{{ branch.address || '—' }}</td><td>{{ branch.contactNumber || '—' }}</td><td class="row-actions"><button type="button" (click)="openEdit(branch)">Edit</button><button class="delete-button" type="button" (click)="delete(branch)">Delete</button></td></tr></tbody>
+    </table>
+    <ng-template #noBranches><p class="empty-state">No branches found.</p></ng-template>
+  </div>
+
+  <div class="editor-backdrop" *ngIf="editorOpen()" role="presentation" (click)="closeEditor()">
+    <section class="editor-dialog" role="dialog" aria-modal="true" aria-labelledby="branch-editor-title" (click)="$event.stopPropagation()">
+      <button class="close-button" type="button" aria-label="Close form" (click)="closeEditor()">×</button>
+      <h3 id="branch-editor-title">{{ editingID() === null ? 'Create branch' : 'Edit branch' }}</h3>
+      <form #branchForm="ngForm" (ngSubmit)="save(branchForm)">
+        <label>Branch name<input name="name" [(ngModel)]="form.name" maxlength="255" required /></label>
+        <label>Address<textarea name="address" [(ngModel)]="form.address" rows="2"></textarea></label>
+        <label>Contact number<input name="contactNumber" [(ngModel)]="form.contactNumber" maxlength="15" /></label>
+        <p class="error-message" *ngIf="error()" role="alert">{{ error() }}</p>
+        <div class="editor-actions"><button class="secondary-button" type="button" (click)="closeEditor()">Cancel</button><button class="primary-button" type="submit" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Save' }}</button></div>
+      </form>
+    </section>
+  </div>
+</section>

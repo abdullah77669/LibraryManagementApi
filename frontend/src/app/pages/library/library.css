@@ -21,6 +21,11 @@
 .summary-card strong { font: 2rem Georgia, serif; }
 .attention-card { border-color: #d7aaa2; background: #fff8f6; }
 .attention-card .summary-icon { background: #f8e3df; color: #9f4133; }
+.workflow-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+.workflow-card { display: flex; min-height: 170px; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 1.25rem; border: 1px solid #e1ddcf; border-radius: 12px; background: #fffefa; }
+.workflow-card h2 { margin: 0; font: 1.3rem Georgia, serif; }
+.workflow-card p { margin: .55rem 0 0; color: #60695f; line-height: 1.5; }
+.workflow-card button { padding: .6rem .9rem; border: 1px solid #45634e; border-radius: 6px; background: #45634e; color: white; font-weight: 600; cursor: pointer; }
 .loading-state, .error-state { padding: 1.5rem; border: 1px dashed #d2cdbc; border-radius: 10px; color: #697366; }
 .error-state { border-color: #d7aaa2; color: #9f4133; }
 .catalog-link { display: inline-block; margin-top: 2rem; color: #43584a; font-weight: 700; }

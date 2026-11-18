@@ -47,6 +47,7 @@ namespace LMS_APIs.Repository
             existingBook.Language = book.Language;
             existingBook.Excerpts = book.Excerpts;
             existingBook.PublishDate = book.PublishDate;
+            existingBook.ImageUrl = book.ImageUrl;
             _context.SaveChanges();
             return existingBook;
         }

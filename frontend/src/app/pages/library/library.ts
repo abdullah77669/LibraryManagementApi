@@ -1,12 +1,15 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { NgFor, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { finalize } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
 import { CatalogManagement } from './catalog-management';
+import { BorrowerManagement } from './borrower-management';
+import { BranchManagement } from './branch-management';
+import { LoansManagement } from './loans-management';
 
 interface BookSummary { availableCopies: number; }
 interface LoanSummary { status: string; isOverdue: boolean; }
@@ -14,7 +17,7 @@ interface BorrowerSummary { userID: string; }
 interface BranchSummary { branchID: number; }
 
 @Component({
-  imports: [CatalogManagement, NgFor, NgIf, RouterLink],
+  imports: [BorrowerManagement, BranchManagement, CatalogManagement, LoansManagement, NgIf, RouterLink],
   selector: 'app-library',
   styleUrl: './library.css',
   templateUrl: './library.html',
@@ -36,6 +39,11 @@ export class Library {
 
   constructor() {
     this.loadDashboard();
+  }
+
+  selectSection(section: 'dashboard' | 'catalog' | 'loans' | 'borrowers' | 'branches'): void {
+    if ((section === 'borrowers' || section === 'branches') && !this.isAdmin()) return;
+    this.selectedSection.set(section);
   }
 
   loadDashboard(): void {

@@ -1,0 +1,33 @@
+<section class="loan-management">
+  <div class="loan-heading"><div><p class="eyebrow">Admin and Librarian</p><h2>Loans</h2></div><button class="primary-button" type="button" (click)="openCheckout()">Check out a book</button></div>
+  <div class="loan-toolbar"><label>Show loans<select [value]="filter()" (change)="setFilter($any($event.target).value)"><option>All</option><option>Active</option><option>Returned</option></select></label><button class="secondary-button" type="button" (click)="loadLoans()">Refresh</button></div>
+  <p class="success-message" *ngIf="message()" role="status">{{ message() }}</p>
+  <p class="error-message" *ngIf="error()" role="alert">{{ error() }}</p>
+  <p class="loading-message" *ngIf="loading()" role="status">Loading loans…</p>
+  <div class="table-wrap" *ngIf="!loading() && !error()">
+    <table *ngIf="filteredLoans().length; else noLoans">
+      <thead><tr><th>Borrower</th><th>Book</th><th>Branch</th><th>Borrowed</th><th>Due</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody><tr *ngFor="let loan of filteredLoans()">
+        <td>{{ loan.borrowerName }}<small>{{ loan.borrowerID }}</small></td><td>{{ loan.bookTitle }}</td><td>{{ loan.branchName }}</td>
+        <td>{{ loan.loanDate | date:'mediumDate' }}</td><td [class.overdue-text]="loan.isOverdue">{{ loan.dueDate | date:'mediumDate' }}</td>
+        <td><span class="status-pill" [class.overdue-pill]="loan.isOverdue" [class.returned-pill]="loan.status.toLowerCase() === 'returned'">{{ loan.isOverdue ? 'Overdue' : loan.status }}</span></td>
+        <td><button class="return-button" *ngIf="loan.status.toLowerCase() === 'active'" type="button" [disabled]="returningLoanID() === loan.loanID" (click)="returnLoan(loan)">{{ returningLoanID() === loan.loanID ? 'Returning…' : 'Return' }}</button><span *ngIf="loan.status.toLowerCase() === 'returned'">{{ loan.returnDate | date:'mediumDate' }}</span></td>
+      </tr></tbody>
+    </table>
+    <ng-template #noLoans><p class="empty-state">No loans in this view.</p></ng-template>
+  </div>
+
+  <div class="editor-backdrop" *ngIf="checkoutOpen()" role="presentation" (click)="closeCheckout()">
+    <section class="editor-dialog" role="dialog" aria-modal="true" aria-labelledby="checkout-title" (click)="$event.stopPropagation()">
+      <button class="close-button" type="button" aria-label="Close checkout form" (click)="closeCheckout()">×</button>
+      <h3 id="checkout-title">Check out a book</h3>
+      <form #checkoutNgForm="ngForm" (ngSubmit)="checkout(checkoutNgForm)">
+        <label>Borrower ID<input name="borrowerID" [(ngModel)]="this.checkoutForm.borrowerID" maxlength="50" required /></label>
+        <label>Available copy<select name="bookCopyID" [(ngModel)]="this.checkoutForm.bookCopyID" required><option [ngValue]="null" disabled>Select a copy</option><option *ngFor="let copy of availableCopies()" [ngValue]="copy.id">{{ copy.label }}</option></select></label>
+        <label>Due date (optional)<input name="dueDate" type="date" [(ngModel)]="this.checkoutForm.dueDate" /></label>
+        <p class="empty-state" *ngIf="!availableCopies().length">No available copies to check out.</p>
+        <div class="editor-actions"><button class="secondary-button" type="button" (click)="closeCheckout()">Cancel</button><button class="primary-button" type="submit" [disabled]="checkoutLoading() || !availableCopies().length">{{ checkoutLoading() ? 'Checking out…' : 'Check out' }}</button></div>
+      </form>
+    </section>
+  </div>
+</section>
